@@ -1,5 +1,5 @@
 from flask import Flask
-from threading import Thread
+from waitress import serve
 
 import os
 
@@ -9,9 +9,5 @@ app = Flask('')
 def home():
     return "I'm alive"
 
-def run():
-    app.run(host=os.environ['HOST'], port=int(os.environ['PORT']))
-
 def keep_alive():
-    t = Thread(target=run)
-    t.start()
+    serve(app, host=os.environ['HOST'], port=int(os.environ['PORT']))

@@ -3,7 +3,7 @@ import discord
 import os
 import re
 
-from keep_alive import keep_alive
+import web_server
 from urllib.request import urlopen
 
 def find_cid(card_number: str) -> str:
@@ -57,7 +57,7 @@ def main():
             await message.channel.send(return_message)
 
     token = os.environ['DISCORD_BOT_TOKEN']
-    keep_alive()
+    web_server.run(os.environ['SERVER_TYPE'])
     client.run(token)
 
 

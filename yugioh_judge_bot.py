@@ -26,6 +26,7 @@ def message_handler(message: str) -> str:
     cid = find_cid(message)
     if not cid:
       print(f'{message} cannot find')
+      return ""
     return_url = f'https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&cid={cid}&request_locale=ja'
     print(f'Q&A URL: {return_url}')
     return return_url
@@ -51,7 +52,8 @@ def main():
       return
     # 關鍵字回覆
     return_message = message_handler(message.content)
-    await message.channel.send(return_message)
+    if return_message:
+      await message.channel.send(return_message)
 
   token = os.environ['DISCORD_BOT_TOKEN']
   client.run(token)

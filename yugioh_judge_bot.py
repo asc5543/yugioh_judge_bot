@@ -39,6 +39,7 @@ def main():
     intents = discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents=intents)
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
     # 調用event函式庫
     @client.event

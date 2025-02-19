@@ -1,5 +1,6 @@
 import discord
 
+import logging
 import os
 import re
 
@@ -8,7 +9,7 @@ from urllib.request import urlopen
 
 def find_cid(card_number: str) -> str:
     search_url = f'https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=1&sess=1&keyword={card_number}&stype=4&ctype=&starfr=&starto=&pscalefr=&pscaleto=&linkmarkerfr=&linkmarkerto=&link_m=2&atkfr=&atkto=&deffr=&defto=&othercon=2&request_locale=ja'
-    print(search_url)
+    logging.info(f'Connect to {search_url}')
     card_search_page = urlopen(search_url)
     # value="/yugiohdb/card_search.action?ope=2&cid=15470"
     cid_pattern = re.compile('ope=2&cid=([^"]*)')
@@ -26,10 +27,10 @@ def message_handler(message: str) -> str:
     if message.find('-') in [2, 3, 4]:
         cid = find_cid(message)
         if not cid:
-            print(f'{message} cannot find')
+            logging.info(f'{message} cannot find')
             return ""
         return_url = f'https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&cid={cid}&request_locale=ja'
-        print(f'Q&A URL: {return_url}')
+        logging.info(f'Q&A URL: {return_url}')
         return return_url
 
 
@@ -43,7 +44,15 @@ def main():
     @client.event
     # 當機器人完成啟動
     async def on_ready():
-        print(f'目前登入身份 --> {client.user}')
+        logging.info(f'目前登入身份 --> {client.user}')
+
+    @client.event
+    async def on_message_edit(before: discord.Message, after: discord.Message):
+        if discord.Message.author == client.user:
+            return
+        await after.channel.send(
+            f"{after.author} 編輯了訊息！原本的訊息是：{before.content}"
+        )
 
     @client.event
     # 當頻道有新訊息

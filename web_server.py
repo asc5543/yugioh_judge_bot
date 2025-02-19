@@ -6,6 +6,10 @@ import os
 
 app = Flask(__name__)
 
+@app.route('/ping')
+def ping():
+    return "OK", 200
+
 def run_in_develop():
     app.run(host=os.environ['HOST'], port=int(os.environ['PORT']))
 

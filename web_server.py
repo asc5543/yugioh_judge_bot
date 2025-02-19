@@ -14,7 +14,7 @@ def run_in_prod():
 
 def run(env: str = "prod"):
     if env == "prod":
-        t = Thread(target=run_in_prod)
+        t = Thread(target=run_in_prod, daemon=True)
     else:
-        t = Thread(target=run_in_develop)
+        t = Thread(target=run_in_develop, daemon=True)
     t.start()

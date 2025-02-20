@@ -11,6 +11,7 @@ def find_cid(card_number: str) -> str:
     search_url = f'https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=1&sess=1&keyword={card_number}&stype=4&ctype=&starfr=&starto=&pscalefr=&pscaleto=&linkmarkerfr=&linkmarkerto=&link_m=2&atkfr=&atkto=&deffr=&defto=&othercon=2&request_locale=ja'
     logging.info(f'Connect to {search_url}')
     card_search_page = urlopen(search_url)
+
     # value="/yugiohdb/card_search.action?ope=2&cid=15470"
     cid_pattern = re.compile('ope=2&cid=([^"]*)')
     if card_search_page.getcode() == 200:
@@ -35,15 +36,12 @@ def message_handler(message: str) -> str:
 
 
 def main():
-    # client是跟discord連接，intents是要求機器人的權限
     intents = discord.Intents.default()
     intents.message_content = True
-    client = discord.Client(intents=intents)
+    client = discord.Client(intents=intents, reconnect=True)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
-    # 調用event函式庫
     @client.event
-    # 當機器人完成啟動
     async def on_ready():
         logging.info(f'目前登入身份 --> {client.user}')
 
@@ -56,12 +54,9 @@ def main():
         )
 
     @client.event
-    # 當頻道有新訊息
     async def on_message(message):
-        # 排除機器人本身的訊息，避免無限循環
         if message.author == client.user:
             return
-        # 關鍵字回覆
         return_message = message_handler(message.content)
         if return_message:
             await message.channel.send(return_message)

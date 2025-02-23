@@ -46,14 +46,6 @@ def main():
         logging.info(f'目前登入身份 --> {client.user}')
 
     @client.event
-    async def on_message_edit(before: discord.Message, after: discord.Message):
-        if discord.Message.author == client.user:
-            return
-        await after.channel.send(
-            f"{after.author} 編輯了訊息！原本的訊息是：{before.content}"
-        )
-
-    @client.event
     async def on_message(message):
         if message.author == client.user:
             return
